@@ -30,11 +30,10 @@ pip install django-flyio
 ```python
 # settings.py
 from django_flyio.db import get_db_config
-from django_flyio.routers import FlyDBReplicaRouter
 
 DATABASES = get_db_config()
 
-DATABASE_ROUTERS = [FlyDBReplicaRouter]
+DATABASE_ROUTERS = ["django_flyio.routers.FlyDBReplicaRouter"]
 ```
 
 ### Middleware
