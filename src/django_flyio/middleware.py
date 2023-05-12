@@ -40,7 +40,7 @@ class FlyResponseMiddleware:
             return self.__acall__(request)
         response = self.get_response(request)
         assert isinstance(response, HttpResponseBase)  # noqa: S101
-        self.add_response_headers(request, response)
+        self.add_response_headers(response)
         return response
 
     async def __acall__(self, request: HttpRequest) -> HttpResponseBase:
