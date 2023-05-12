@@ -22,6 +22,9 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
         python-version: ['3.6', '3.7', '3.8', '3.9', '3.10', '3.11', '3.12-dev']
+        exclude:
+          - os: ubuntu-latest
+            python-version: '3.6'
     steps:
     - uses: actions/checkout@v3
     
@@ -38,7 +41,7 @@ jobs:
     # https://hynek.me/articles/ditch-codecov-python/
     - name: Run tests
       run: |
-        time coverage run -m pytest --durations 10 --reverse -p no:randomly -n auto --dist loadfile
+        time coverage run -m pytest
         python -m coverage html --skip-covered --skip-empty
         python -m coverage report | sed 's/^/    /' >> $GITHUB_STEP_SUMMARY
         python -m coverage report --fail-under=100
