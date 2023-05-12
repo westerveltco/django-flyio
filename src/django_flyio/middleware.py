@@ -39,18 +39,18 @@ class FlyResponseMiddleware:
         if self._is_coroutine:
             return self.__acall__(request)
         response = self.get_response(request)
-        assert isinstance(response, HttpResponseBase)
+        assert isinstance(response, HttpResponseBase)  # noqa: S101
         self.add_response_headers(request, response)
         return response
 
     async def __acall__(self, request: HttpRequest) -> HttpResponseBase:
         aresponse = self.get_response(request)
-        assert not isinstance(aresponse, HttpResponseBase)
+        assert not isinstance(aresponse, HttpResponseBase)  # noqa: S101
         response = await aresponse
-        self.add_response_headers(request, response)
+        self.add_response_headers(response)
         return response
 
-    def add_response_headers(self, request: HttpRequest, response: HttpResponseBase) -> None:
+    def add_response_headers(self, response: HttpResponseBase) -> None:
         if FLY_SERVER not in response:
             machine_id = os.getenv("FLY_ALLOC_ID", None)
             region = os.getenv("FLY_REGION", None)

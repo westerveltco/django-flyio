@@ -34,6 +34,6 @@ async def test_async(async_client, fly_server):
 def test_no_env(client):
     del os.environ["FLY_ALLOC_ID"]
     del os.environ["FLY_REGION"]
-    
+
     response = client.get("/")
-    assert response.headers["Fly-Server"] == 'unknown'
+    assert response.headers["Fly-Server"] == "unknown"
