@@ -7,6 +7,11 @@ and this project attempts to adhere to [Semantic Versioning](https://semver.org/
 
 ## [Unreleased]
 
+## [0.1.1] - 2023-05-12
+
+### Fixed
+
+- Added `py.typed` file to package to indicate that it supports type hints
 
 ## [0.1.0] - 2023-05-12
 
@@ -21,5 +26,6 @@ Initial release!
 - Initial tests
 - Initial CI/CD (GitHub Actions)
 
-[unreleased]: https://github.com/joshuadavidthomas/django-flyio/compare/v0.1.0...HEAD
+[unreleased]: https://github.com/joshuadavidthomas/django-flyio/compare/v0.1.1...HEAD
+[0.1.1]: https://github.com/joshuadavidthomas/django-flyio/releases/tag/v0.1.1
 [0.1.0]: https://github.com/joshuadavidthomas/django-flyio/releases/tag/v0.1.0
