@@ -6,22 +6,23 @@ build-backend = "hatchling.build"
 name = "django-flyio"
 description = ''
 readme = "README.md"
-requires-python = ">=3.6"
+requires-python = ">=3.7"
 license = "MIT"
 keywords = []
 authors = [{ name = "Josh", email = "josh@joshthomas.dev" }]
 classifiers = [
   "Development Status :: 4 - Beta",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
   "Programming Language :: Python",
   "Programming Language :: Python :: 3",
-  "Programming Language :: Python :: 3.6",
+  "Programming Language :: Python :: 3 :: Only",
   "Programming Language :: Python :: 3.7",
   "Programming Language :: Python :: 3.8",
   "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: Implementation :: CPython",
-  "Programming Language :: Python :: Implementation :: PyPy",
 ]
 dependencies = ["django>=3.2", "dj_database_url"]
 dynamic = ["version"]
