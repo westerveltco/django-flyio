@@ -25,6 +25,9 @@ jobs:
         exclude:
           - os: ubuntu-latest
             python-version: '3.6'
+        include:
+          - os: ubuntu-20.04
+            python-version: '3.6'
     steps:
     - uses: actions/checkout@v3
     
@@ -41,7 +44,7 @@ jobs:
     # https://hynek.me/articles/ditch-codecov-python/
     - name: Run tests
       run: |
-        time coverage run -m pytest
+        coverage run -m pytest
         python -m coverage html --skip-covered --skip-empty
         python -m coverage report | sed 's/^/    /' >> $GITHUB_STEP_SUMMARY
         python -m coverage report --fail-under=100
