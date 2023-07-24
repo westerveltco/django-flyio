@@ -28,6 +28,8 @@ dynamic = ["version"]
 
 [project.optional-dependencies]
 dev = ["black", "hatch", "ruff"]
+psycopg = ["psycopg", "psycopg-binary"]
+psycopg2 = ["psycopg2-binary"]
 test = ["coverage[toml]", "pytest", "pytest-asyncio", "pytest-django"]
 types = ["django-stubs", "mypy"]
 
