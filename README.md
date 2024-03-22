@@ -1,53 +1,41 @@
 # django-flyio
 
-[![PyPI - Version](https://img.shields.io/pypi/v/django-flyio.svg)](https://pypi.org/project/django-flyio)
-[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/django-flyio.svg)](https://pypi.org/project/django-flyio)
+[![PyPI](https://img.shields.io/pypi/v/django-flyio)](https://pypi.org/project/django-flyio/)
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/django-flyio)
+![Django Version](https://img.shields.io/badge/django-3.2%20%7C%204.2%20%7C%205.0-%2344B78B?labelColor=%23092E20)
+<!-- https://shields.io/badges -->
+<!-- django-3.2 | 4.2 | 5.0-#44B78B -->
+<!-- labelColor=%23092E20 -->
 
----
+## Requirements
 
-A set of simple utilities for Django apps running on [Fly.io](https://fly.io).
+- Python 3.8, 3.9, 3.10, 3.11, 3.12
+- Django 3.2, 4.2, 5.0
 
-**Note:** This package is designed to work with [V2 Apps](https://fly.io/docs/reference/apps/). It has not been tested with V1 Apps.
+## Getting Started
 
-## Installation
+1. Install the package from PyPI:
 
-```shell
-pip install django-flyio
+```bash
+python -m pip install django-flyio
+```
+
+2. Add the app to your Django project's `INSTALLED_APPS`:
+
+```python
+INSTALLED_APPS = [
+    ...,
+    "django_flyio",
+    ...,
+]
 ```
 
 ## Usage
 
-### Multi-Region Fly Postgres
+## Documentation
 
-1.  Set your `DATABASES` settings to call `get_db_config` from `django_flyio.db`.
-
-    This function reads the `PRIMARY_REGION` and `FLY_REGION` environment variables to determine the Fly region the primary database is in and the Fly region the app is currently running in.
-
-2.  Add `django_flyio.routers.FlyDBReplicaRouter` to your `DATABASE_ROUTERS` settings.
-
-    This router reads whether the `DATABASES` setting has a `replica` key and, if so, routes reads to the replica database.
-
-```python
-# settings.py
-from django_flyio.db import get_db_config
-
-DATABASES = get_db_config()
-
-DATABASE_ROUTERS = ["django_flyio.routers.FlyDBReplicaRouter"]
-```
-
-### Middleware
-
-To set the `Fly-Server` header containing the Fly server and region that served the request, add `django_flyio.middleware.FlyResponseMiddleware` to your `MIDDLEWARE` settings.
-
-```python
-# settings.py
-MIDDLEWARE = [
-    # ...
-    'django_flyio.middleware.FlyResponseMiddleware',
-]
-```
+Please refer to the [documentation](https://django-flyio.westervelt.dev/) for more information.
 
 ## License
 
-`django-flyio` is distributed under the terms of the [MIT](https://spdx.org/licenses/MIT.html) license.
+`django-flyio` is licensed under the MIT license. See the [`LICENSE`](LICENSE) file for more information.

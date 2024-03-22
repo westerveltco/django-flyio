@@ -32,7 +32,8 @@ class FlyResponseMiddleware:
     def __init__(
         self,
         get_response: (
-            Callable[[HttpRequest], HttpResponseBase] | Callable[[HttpRequest], Awaitable[HttpResponseBase]]
+            Callable[[HttpRequest], HttpResponseBase]
+            | Callable[[HttpRequest], Awaitable[HttpResponseBase]]
         ),
     ) -> None:
         self.get_response = get_response
@@ -43,7 +44,9 @@ class FlyResponseMiddleware:
         else:
             self._is_coroutine = None
 
-    def __call__(self, request: HttpRequest) -> HttpResponseBase | Awaitable[HttpResponseBase]:
+    def __call__(
+        self, request: HttpRequest
+    ) -> HttpResponseBase | Awaitable[HttpResponseBase]:
         if self._is_coroutine:
             return self.__acall__(request)
         response = self.get_response(request)
@@ -75,7 +78,8 @@ class FlyReplayMiddleware:
     def __init__(
         self,
         get_response: (
-            Callable[[HttpRequest], HttpResponseBase] | Callable[[HttpRequest], Awaitable[HttpResponseBase]]
+            Callable[[HttpRequest], HttpResponseBase]
+            | Callable[[HttpRequest], Awaitable[HttpResponseBase]]
         ),
     ) -> None:
         self.get_response = get_response
@@ -86,15 +90,23 @@ class FlyReplayMiddleware:
         else:
             self._is_coroutine = None
 
-    def __call__(self, request: HttpRequest) -> HttpResponseBase | Awaitable[HttpResponseBase]:
-        return self.__acall__(request) if self._is_coroutine else self.get_response(request)
+    def __call__(
+        self, request: HttpRequest
+    ) -> HttpResponseBase | Awaitable[HttpResponseBase]:
+        return (
+            self.__acall__(request)
+            if self._is_coroutine
+            else self.get_response(request)
+        )
 
     async def __acall__(self, request: HttpRequest) -> HttpResponseBase:
         aresponse = self.get_response(request)
         assert not isinstance(aresponse, HttpResponseBase)  # noqa: S101
         return await aresponse
 
-    def process_exception(self, request: HttpRequest, exception: Exception) -> HttpResponseBase:  # noqa: ARG002
+    def process_exception(
+        self, request: HttpRequest, exception: Exception
+    ) -> HttpResponseBase:  # noqa: ARG002
         if isinstance(exception, ReadOnlySqlTransaction):
             primary_region = os.getenv("PRIMARY_REGION", None)
             response = HttpResponse()
