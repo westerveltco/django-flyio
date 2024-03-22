@@ -22,13 +22,19 @@ def fly_server(request):
 
 def test_sync(client, fly_server):
     response = client.get("/")
-    assert response.headers["Fly-Server"] == f"{fly_server['allocation_id']}-{fly_server['region']}"
+    assert (
+        response.headers["Fly-Server"]
+        == f"{fly_server['allocation_id']}-{fly_server['region']}"
+    )
 
 
 @pytest.mark.asyncio
 async def test_async(async_client, fly_server):
     response = await async_client.get("/async/")
-    assert response.headers["Fly-Server"] == f"{fly_server['allocation_id']}-{fly_server['region']}"
+    assert (
+        response.headers["Fly-Server"]
+        == f"{fly_server['allocation_id']}-{fly_server['region']}"
+    )
 
 
 def test_no_env(client):

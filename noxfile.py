@@ -1,6 +1,12 @@
 from __future__ import annotations
 
+import os
+from pathlib import Path
+
 import nox
+
+nox.options.default_venv_backend = "uv|virtualenv"
+nox.options.reuse_existing_virtualenvs = True
 
 PY38 = "3.8"
 PY39 = "3.9"
@@ -8,21 +14,18 @@ PY310 = "3.10"
 PY311 = "3.11"
 PY312 = "3.12"
 PY_VERSIONS = [PY38, PY39, PY310, PY311, PY312]
-PY_DEFAULT = PY38
+PY_DEFAULT = PY_VERSIONS[0]
+PY_LATEST = PY_VERSIONS[-1]
 
 DJ32 = "3.2"
-DJ40 = "4.0"
-DJ41 = "4.1"
 DJ42 = "4.2"
+DJ50 = "5.0"
 DJMAIN = "main"
 DJMAIN_MIN_PY = PY310
-DJ_VERSIONS = [DJ32, DJ40, DJ41, DJ42, DJMAIN]
-DJ_DEFAULT = DJ32
-
-PSYCOPG2 = "2"
-PSYCOPG3 = "3"
-PSYCOPG_VERSIONS = [PSYCOPG2, PSYCOPG3]
-PSYCOPG_DEFAULT = PSYCOPG3
+DJ_VERSIONS = [DJ32, DJ42, DJ50, DJMAIN]
+DJ_LTS = [DJ32, DJ42]
+DJ_DEFAULT = DJ_LTS[0]
+DJ_LATEST = DJ_VERSIONS[-2]
 
 
 def version(ver: str) -> tuple[int, ...]:
@@ -30,38 +33,88 @@ def version(ver: str) -> tuple[int, ...]:
     return tuple(map(int, ver.split(".")))
 
 
-def should_skip(python: str, django: str, psycopg: str) -> tuple(bool, str | None):
+def should_skip(python: str, django: str) -> bool:
     """Return True if the test should be skipped"""
+
     if django == DJMAIN and version(python) < version(DJMAIN_MIN_PY):
-        return True, f"Django {DJMAIN} requires Python {DJMAIN_MIN_PY}+"
+        # Django main requires Python 3.10+
+        return True
 
     if django == DJ32 and version(python) >= version(PY312):
-        return True, f"Django {DJ32} requires Python < {PY312}"
+        # Django 3.2 requires Python < 3.12
+        return True
 
-    if psycopg == PSYCOPG3 and version(python) >= version(PY312):
-        return True, f"psycopg3 requires Python < {PY312}"
+    if django == DJ50 and version(python) < version(PY310):
+        # Django 5.0 requires Python 3.10+
+        return True
 
-    return False, None
+    return False
 
 
-@nox.session(python=PY_VERSIONS)
-@nox.parametrize("django", DJ_VERSIONS)
-@nox.parametrize("psycopg", PSYCOPG_VERSIONS)
-def tests(session, django, psycopg):
-    skip = should_skip(session.python, django, psycopg)
-    if skip[0]:
-        session.skip(skip[1])
+@nox.session
+def test(session):
+    session.notify(f"tests(python='{PY_DEFAULT}', django='{DJ_DEFAULT}')")
 
-    session.install(".[test]")
+
+@nox.session
+@nox.parametrize(
+    "python,django",
+    [
+        (python, django)
+        for python in PY_VERSIONS
+        for django in DJ_VERSIONS
+        if not should_skip(python, django)
+    ],
+)
+def tests(session, django):
+    session.install("django-flyio[dev] @ .")
 
     if django == DJMAIN:
-        session.install("https://github.com/django/django/archive/refs/heads/main.zip")
+        session.install(
+            "django @ https://github.com/django/django/archive/refs/heads/main.zip"
+        )
     else:
         session.install(f"django=={django}")
 
-    if psycopg == PSYCOPG2:
-        session.install("psycopg2-binary")
-    elif psycopg == PSYCOPG3:
-        session.install("psycopg[binary]")
+    session.run("python", "-m", "pytest")
 
-    session.run("pytest")
+
+@nox.session
+def coverage(session):
+    session.install("django-flyio[dev] @ .")
+    session.run("python", "-m", "pytest", "--cov=django_flyio")
+
+    try:
+        summary = os.environ["GITHUB_STEP_SUMMARY"]
+        with Path(summary).open("a") as output_buffer:
+            output_buffer.write("")
+            output_buffer.write("### Coverage\n\n")
+            output_buffer.flush()
+            session.run(
+                "python",
+                "-m",
+                "coverage",
+                "report",
+                "--skip-covered",
+                "--skip-empty",
+                "--format=markdown",
+                stdout=output_buffer,
+            )
+    except KeyError:
+        session.run(
+            "python", "-m", "coverage", "html", "--skip-covered", "--skip-empty"
+        )
+
+    session.run("python", "-m", "coverage", "report")
+
+
+@nox.session
+def lint(session):
+    session.install("django-flyio[lint] @ .")
+    session.run("python", "-m", "pre_commit", "run", "--all-files")
+
+
+@nox.session
+def mypy(session):
+    session.install("django-flyio[dev] @ .")
+    session.run("python", "-m", "mypy", ".")
