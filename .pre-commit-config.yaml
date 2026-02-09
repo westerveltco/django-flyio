@@ -16,8 +16,8 @@ repos:
       - id: django-upgrade
         args: [--target-version, "4.2"]
 
-  - repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: v0.0.262
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.9.7
     hooks:
       - id: ruff
         alias: autoformat

@@ -29,7 +29,7 @@ def version(ver: str) -> tuple[int, ...]:
     return tuple(map(int, ver.split(".")))
 
 
-def should_skip(python: str, django: str, psycopg: str) -> tuple[bool, str | None]:
+def should_skip(python: str, django: str, psycopg: str) -> tuple[bool, str | None]:  # noqa: ARG001
     """Return True if the test should be skipped"""
     if django == DJMAIN and version(python) < version(DJMAIN_MIN_PY):
         return True, f"Django {DJMAIN} requires Python {DJMAIN_MIN_PY}+"

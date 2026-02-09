@@ -8,9 +8,9 @@ from __future__ import annotations
 
 import asyncio
 import os
+from collections.abc import Awaitable
+from collections.abc import Callable
 from http import HTTPStatus
-from typing import Awaitable
-from typing import Callable
 
 from django.http import HttpRequest
 from django.http.response import HttpResponse
