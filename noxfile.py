@@ -40,9 +40,9 @@ def should_skip(python: str, django: str, psycopg: str) -> tuple[bool, str | Non
     return False, None
 
 
-@nox.session(python=PY_VERSIONS)  # type: ignore[misc]
-@nox.parametrize("django", DJ_VERSIONS)
-@nox.parametrize("psycopg", PSYCOPG_VERSIONS)
+@nox.session(python=PY_VERSIONS)  # type: ignore[untyped-decorator]
+@nox.parametrize("django", DJ_VERSIONS)  # type: ignore[untyped-decorator]
+@nox.parametrize("psycopg", PSYCOPG_VERSIONS)  # type: ignore[untyped-decorator]
 def tests(session: nox.Session, django: str, psycopg: str) -> None:
     skip = should_skip(session.python, django, psycopg)
     if skip[0]:
