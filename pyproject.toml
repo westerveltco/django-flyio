@@ -11,21 +11,20 @@ classifiers = [
   "Programming Language :: Python",
   "Programming Language :: Python :: 3",
   "Programming Language :: Python :: 3 :: Only",
-  "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
   "Programming Language :: Python :: Implementation :: CPython",
 ]
-dependencies = ["django>=3.2", "dj_database_url"]
+dependencies = ["django>=4.2", "dj_database_url"]
 description = 'A set of simple utilities for Django apps running on Fly.io'
 dynamic = ["version"]
 keywords = []
 license = "MIT"
 name = "django-flyio"
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 
 [project.optional-dependencies]
 dev = ["black", "hatch", "ruff"]
@@ -45,7 +44,7 @@ path = "src/django_flyio/__init__.py"
 [tool.black]
 line-length = 120
 skip-string-normalization = true
-target-version = ["py39"]
+target-version = ["py310"]
 
 [tool.coverage.report]
 exclude_lines = ["no cov", "if __name__ == .__main__.:", "if TYPE_CHECKING:"]
@@ -69,7 +68,7 @@ pythonpath = ". src"
 
 [tool.ruff]
 line-length = 120
-target-version = "py39"
+target-version = "py310"
 
 [tool.ruff.lint]
 ignore = [
