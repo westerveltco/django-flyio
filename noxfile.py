@@ -12,6 +12,7 @@ PY_DEFAULT = PY310
 DJ42 = "4.2"
 DJ52 = "5.2"
 DJ60 = "6.0"
+DJ60_MIN_PY = PY312
 DJMAIN = "main"
 DJMAIN_MIN_PY = PY312
 DJ_VERSIONS = [DJ42, DJ52, DJ60, DJMAIN]
@@ -33,10 +34,13 @@ def should_skip(python: str, django: str, psycopg: str) -> tuple[bool, str | Non
     if django == DJMAIN and version(python) < version(DJMAIN_MIN_PY):
         return True, f"Django {DJMAIN} requires Python {DJMAIN_MIN_PY}+"
 
+    if django == DJ60 and version(python) < version(DJ60_MIN_PY):
+        return True, f"Django {DJ60} requires Python {DJ60_MIN_PY}+"
+
     return False, None
 
 
-@nox.session(python=PY_VERSIONS)
+@nox.session(python=PY_VERSIONS)  # type: ignore[misc]
 @nox.parametrize("django", DJ_VERSIONS)
 @nox.parametrize("psycopg", PSYCOPG_VERSIONS)
 def tests(session: nox.Session, django: str, psycopg: str) -> None:
