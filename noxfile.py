@@ -2,20 +2,20 @@ from __future__ import annotations
 
 import nox
 
-PY38 = "3.8"
 PY39 = "3.9"
 PY310 = "3.10"
 PY311 = "3.11"
 PY312 = "3.12"
-PY_VERSIONS = [PY38, PY39, PY310, PY311, PY312]
-PY_DEFAULT = PY38
+PY313 = "3.13"
+PY_VERSIONS = [PY39, PY310, PY311, PY312, PY313]
+PY_DEFAULT = PY39
 
 DJ32 = "3.2"
 DJ40 = "4.0"
 DJ41 = "4.1"
 DJ42 = "4.2"
 DJMAIN = "main"
-DJMAIN_MIN_PY = PY310
+DJMAIN_MIN_PY = PY312
 DJ_VERSIONS = [DJ32, DJ40, DJ41, DJ42, DJMAIN]
 DJ_DEFAULT = DJ32
 
@@ -30,16 +30,10 @@ def version(ver: str) -> tuple[int, ...]:
     return tuple(map(int, ver.split(".")))
 
 
-def should_skip(python: str, django: str, psycopg: str) -> tuple(bool, str | None):
+def should_skip(python: str, django: str, psycopg: str) -> tuple[bool, str | None]:
     """Return True if the test should be skipped"""
     if django == DJMAIN and version(python) < version(DJMAIN_MIN_PY):
         return True, f"Django {DJMAIN} requires Python {DJMAIN_MIN_PY}+"
-
-    if django == DJ32 and version(python) >= version(PY312):
-        return True, f"Django {DJ32} requires Python < {PY312}"
-
-    if psycopg == PSYCOPG3 and version(python) >= version(PY312):
-        return True, f"psycopg3 requires Python < {PY312}"
 
     return False, None
 
@@ -47,7 +41,7 @@ def should_skip(python: str, django: str, psycopg: str) -> tuple(bool, str | Non
 @nox.session(python=PY_VERSIONS)
 @nox.parametrize("django", DJ_VERSIONS)
 @nox.parametrize("psycopg", PSYCOPG_VERSIONS)
-def tests(session, django, psycopg):
+def tests(session: nox.Session, django: str, psycopg: str) -> None:
     skip = should_skip(session.python, django, psycopg)
     if skip[0]:
         session.skip(skip[1])
