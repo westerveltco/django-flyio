@@ -37,7 +37,7 @@ jobs:
 
     - name: Run tests
       run: |
-          nox --session "tests-${{ matrix.python-version }}(psycopg='${{ matrix.psycopg-version }}', django='${{ matrix.django-version }}')"
+          nox --session "tests-${{ matrix.python-version }}(django='${{ matrix.django-version }}', psycopg='${{ matrix.psycopg-version }}')"
 
   tests:
     runs-on: ubuntu-latest
