@@ -8,9 +8,9 @@ from __future__ import annotations
 
 import asyncio
 import os
+from collections.abc import Awaitable
+from collections.abc import Callable
 from http import HTTPStatus
-from typing import Awaitable
-from typing import Callable
 
 from django.http import HttpRequest
 from django.http.response import HttpResponse
@@ -94,7 +94,7 @@ class FlyReplayMiddleware:
         assert not isinstance(aresponse, HttpResponseBase)  # noqa: S101
         return await aresponse
 
-    def process_exception(self, request: HttpRequest, exception: Exception) -> HttpResponseBase:  # noqa: ARG002
+    def process_exception(self, request: HttpRequest, exception: Exception) -> HttpResponseBase | None:  # noqa: ARG002
         if isinstance(exception, ReadOnlySqlTransaction):
             primary_region = os.getenv("PRIMARY_REGION", None)
             response = HttpResponse()
@@ -102,3 +102,4 @@ class FlyReplayMiddleware:
             response.status_code = HTTPStatus.CONFLICT
             response[FLY_REPLAY] = f"region={primary_region}"
             return response
+        return None
