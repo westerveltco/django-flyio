@@ -31,9 +31,7 @@ class FlyResponseMiddleware:
 
     def __init__(
         self,
-        get_response: (
-            Callable[[HttpRequest], HttpResponseBase] | Callable[[HttpRequest], Awaitable[HttpResponseBase]]
-        ),
+        get_response: Callable[[HttpRequest], HttpResponseBase] | Callable[[HttpRequest], Awaitable[HttpResponseBase]],
     ) -> None:
         self.get_response = get_response
         if asyncio.iscoroutinefunction(self.get_response):
@@ -74,9 +72,7 @@ class FlyReplayMiddleware:
 
     def __init__(
         self,
-        get_response: (
-            Callable[[HttpRequest], HttpResponseBase] | Callable[[HttpRequest], Awaitable[HttpResponseBase]]
-        ),
+        get_response: Callable[[HttpRequest], HttpResponseBase] | Callable[[HttpRequest], Awaitable[HttpResponseBase]],
     ) -> None:
         self.get_response = get_response
         if asyncio.iscoroutinefunction(self.get_response):
