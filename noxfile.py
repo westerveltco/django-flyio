@@ -6,17 +6,18 @@ PY310 = "3.10"
 PY311 = "3.11"
 PY312 = "3.12"
 PY313 = "3.13"
-PY_VERSIONS = [PY310, PY311, PY312, PY313]
+PY314 = "3.14"
+PY_VERSIONS = [PY310, PY311, PY312, PY313, PY314]
 PY_DEFAULT = PY310
 
-DJ42 = "4.2"
 DJ52 = "5.2"
 DJ60 = "6.0"
+DJ61 = "6.1"
 DJ60_MIN_PY = PY312
 DJMAIN = "main"
 DJMAIN_MIN_PY = PY312
-DJ_VERSIONS = [DJ42, DJ52, DJ60, DJMAIN]
-DJ_DEFAULT = DJ42
+DJ_VERSIONS = [DJ52, DJ60, DJ61, DJMAIN]
+DJ_DEFAULT = DJ52
 
 PSYCOPG2 = "2"
 PSYCOPG3 = "3"
@@ -34,8 +35,8 @@ def should_skip(python: str, django: str, psycopg: str) -> tuple[bool, str | Non
     if django == DJMAIN and version(python) < version(DJMAIN_MIN_PY):
         return True, f"Django {DJMAIN} requires Python {DJMAIN_MIN_PY}+"
 
-    if django == DJ60 and version(python) < version(DJ60_MIN_PY):
-        return True, f"Django {DJ60} requires Python {DJ60_MIN_PY}+"
+    if django in (DJ60, DJ61) and version(python) < version(DJ60_MIN_PY):
+        return True, f"Django {django} requires Python {DJ60_MIN_PY}+"
 
     return False, None
 
