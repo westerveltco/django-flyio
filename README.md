@@ -9,6 +9,11 @@ A set of simple utilities for Django apps running on [Fly.io](https://fly.io).
 
 **Note:** This package is designed to work with [V2 Apps](https://fly.io/docs/reference/apps/). It has not been tested with V1 Apps.
 
+## Requirements
+
+- Python 3.10, 3.11, 3.12, 3.13, 3.14
+- Django 5.2, 6.0, 6.1
+
 ## Installation
 
 ```shell

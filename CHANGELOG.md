@@ -9,6 +9,15 @@ and this project attempts to adhere to [Semantic Versioning](https://semver.org/
 
 - Dropped support for Python 3.7 (EOL 2023-06-27)
 
+### Added
+
+- Added support for Django 6.1.
+- Added support for Python 3.14.
+
+### Removed
+
+- Dropped support for Django 4.2. The minimum supported version is now Django 5.2.
+
 ## [0.1.1] - 2023-05-12
 
 ### Fixed
